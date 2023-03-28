@@ -1,0 +1,22 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(194, 107, 136);
+}
+
+.searchContainer {
+    background-color: aqua;
+    width: 100vw;
+    height: 100px;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    background-color: antiquewhite;
+    /*
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    */
+}

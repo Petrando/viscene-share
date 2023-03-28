@@ -1,0 +1,101 @@
+.node {
+    cursor: pointer;
+}
+
+.node:hover {
+    stroke: #000;
+    /*<--stroke-width: 1.5px;-->*/
+}
+
+.node--leaf {
+    fill: white;
+}
+
+.circle_pack_label, .total_label {
+    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-anchor: middle;
+    text-shadow: 0 1px 0 #33ff33, 1px 0 0 #33ff33, -1px 0 0 #33ff33, 0 -1px 0 #33ff33;
+}
+
+.total_label{
+    text-shadow: 0 1px 0 lightblue, 1px 0 0 lightblue, -1px 0 0 lightblue, 0 -1px 0 lightblue;
+}
+
+.circle_pack_label_risky {
+    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-anchor: middle;
+    text-shadow: 0 1px 0 #ff3300, 1px 0 0 #ff3300, -1px 0 0 #ff3300, 0 -1px 0 #ff3300;
+}
+
+.circle_pack_label_warning {
+    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-anchor: middle;
+    text-shadow: 0 1px 0 #f4a742, 1px 0 0 #f4a742, -1px 0 0 #f4a742, 0 -1px 0 #f4a742;
+}
+
+.circle_pack_label,
+.node--root/*,
+<!--.node--leaf-->*/ {
+    pointer-events: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.bar {
+    fill: steelblue;
+}
+
+.x.axis path {
+    display: none;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.tooltipG text, #totalTooltipGroup text{  
+    pointer-events: none;
+    text-anchor:middle;
+}
+
+.tooltipG .tooltipLbl,#totalTooltipGroup .tooltipLbl{
+    font-size:12px;
+}
+.tooltipG .tooltipValue,#totalTooltipGroup .tooltipValue{
+    font-weight:bold;
+    font-size:13.5px;
+}
+
+.row{
+    margin: 0px;
+}
+
+.row *{
+    margin-bottom: 0px;
+}
+
+.fieldset{
+    display: inline;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;	
+}
+
+.col{
+    float:left;
+    height:auto;
+}	
+.col#bubble{
+    width:40%;  
+}
+.col#bargraph{
+    width:60%;
+}
