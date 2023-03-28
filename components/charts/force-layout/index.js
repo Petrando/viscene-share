@@ -4,7 +4,6 @@ import { useD3 } from "../../../utils/hooks/useD3";
 import { useWindowDimensions } from "../../../utils/hooks/useWindowDimensions";
 import { useContainerDimensions } from '../../../utils/hooks/useContainerDimensions';
 import { forceData, windsorData } from '../../../utils/const';
-import styles from "../../../styles/components/charts/force/force.module.css";
 
 export const ForceLayout = (props) => {
 
@@ -1398,91 +1397,5 @@ export const ForceLayout = (props) => {
             
         </div>
         
-    );
-}
-
-export const ForceGraph = ({ nodes, links, charge }) => {
-    const [animatedNodes, setAnimatedNodes] = useState([]);
-    const [animatedLinks, setAnimatedLinks] = useState([]);
-
-    //console.log(nodes);
-    //console.log(forceData.nodes);
-  
-    // re-create animation every time nodes change
-    useEffect(() => {
-        const simulation = d3.forceSimulation()
-            .force("x", d3.forceX(400))
-            .force("y", d3.forceY(300))
-            .force("charge", d3.forceManyBody().strength(charge))
-            .force("collision", d3.forceCollide(5))
-            //.force("link", d3.forceLink(links).id(d => {/*console.log(d);*/return d.id}))
-            //.force('links', d3.forceLink());
-    
-        // update state on every frame
-        simulation.on("tick", () => {
-            setAnimatedNodes([...simulation.nodes()]);
-            //setAnimatedLinks([...simulation.links()]);
-        });
-    
-        // copy nodes into simulation
-        simulation.nodes([...nodes]);//.links([...links]);
-        // slow down with a small alpha
-        simulation.alpha(0.1).restart();
-    
-        // stop simulation on unmount
-        return () => simulation.stop();
-    }, [nodes, charge]);
-
-    const calculateYPos = (d) => {        
-        const k = graphHeight/8; //there are 7 layers/generations
-        let newY;
-        if(d.layer){                  
-            newY = ((d.layer) * k) - k;
-            if(d.layer === 1)newY+=7.5;			   
-            if(d.layer === 3){
-            if(d["sub-layer"] === "a"){newY-=35;}
-            if(d["sub-layer"] === "b"){newY+=5;}
-            if(d["sub-layer"] === "c"){newY-=21.25;}
-            if(d["sub-layer"] === "d"){newY+=32.5;}
-            }
-        
-            if(d.layer === 4){
-            if(d["sub-layer"] === "c"){newY+=37.5;}
-            //else{d.y=30;}
-            }
-        
-            if(d.layer === 5){
-            if(d["sub-layer"] === "b"){newY+=32.5;}
-            }
-        
-            if(d.layer === 7){
-            if(d["sub-layer"] === "a"){newY-=25;}
-            }
-        
-            if(d.type==="marriage")newY+=10;
-            if(d.type==="house")newY+=20;
-            if(d.type==="house" && d.name==="House of Bourbon")newY-=1.25;
-            if(d.type==="house" && d.id==="Bernadotte")newY-=6;
-        }
-
-        return newY;
-    }
-  
-    return (
-        <g>
-            {
-                animatedNodes.map((node, i) => {
-                    return (<circle
-                        cx={node.x_pos}
-                        cy={calculateYPos(node)}
-                        r={5}
-                        key={node.id}
-                        stroke="black"
-                        fill="transparent"
-                    />
-                );}
-            )
-            }
-        </g>
     );
 }
