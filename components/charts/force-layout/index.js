@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { useD3 } from "../../../utils/hooks/useD3";
 import { useWindowDimensions } from "../../../utils/hooks/useWindowDimensions";
 import { useContainerDimensions } from '../../../utils/hooks/useContainerDimensions';
-import { forceData, windsorData } from '../../../utils/const';
+import { windsorData } from '../../../utils/const';
 
 export const ForceLayout = (props) => {
 
@@ -503,32 +503,13 @@ export const ForceLayout = (props) => {
             const responsiveYPos = famTreeHeight/graphHeight;
 
             simulation.on("tick", () => {
-                //update link positions
-                /*
-                link
-                    .attr("x1", d => {return d.source.x_pos})
-                    .attr("y1", d => calculateYPos(d.source))
-                    .attr("x2", d => d.target.x_pos)
-                    .attr("y2", d => calculateYPos(d.target));*/
+
                 positionLinks();
-                // update node positions
+                
                 node
                     .attr("transform", function(d){
                         return `translate(${d.x_pos * responsiveXPos}, ${calculateYPos(d)})`;
-                    })
-                    /*.attr("cx", d => {
-                        //from old source code, container width is 1050, so the x_pos is relative to that..
-                        return d.x_pos;
-                    })
-                    .attr("cy", d => {
-                        return calculateYPos(d);
-                    });*/
-            
-                // update label positions
-                /*
-                label
-                    .attr("x", d => { return d.x_pos; })
-                    .attr("y", d => { return d.y; })*/
+                    });                
             });
 
             function positionLinks(){
@@ -742,12 +723,7 @@ export const ForceLayout = (props) => {
 
             const nodeSelection = d3.selectAll("g.nodes");
 
-            const resetPos = () => {
-                /*zoom
-                    .scaleTo(1)
-                    .translate([0,0]);*/
-                //focus.transition().duration(750).attr("transform", "translate(0, 0)scale(1)");
-                //focus.transition().duration(750).call(zoom.transform, d3.zoomIdentity);                
+            const resetPos = () => {                             
                 svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
                 svg.call(zoom);
             }
@@ -849,13 +825,7 @@ export const ForceLayout = (props) => {
                         }
                     }   
                   
-                    let alreadyHilit = false;
-                    
-                    /*if(nodeToSearch!=null && nodeToSearch.name!=name){
-                        unhilit(node.filter(function(d){return d.name === nodeToSearch.name;}), nodeToSearch.idx);
-                        nodeToSearch = null;
-                    }*///else if(nodeToSearch!=null && nodeToSearch.name===name)alreadyHilit = true;
-                    
+                    let alreadyHilit = false;                                                            
 
                     if(nodeToSearch === null){
                         let idxToSearch = nodeSelection.data().findIndex(dNode=>{
@@ -867,16 +837,6 @@ export const ForceLayout = (props) => {
                             }
                             return false;
                         });
-                        /*
-                        node.each(function(dNode, idx){
-                            if(dNode.type === "house" && dNode.name === nodeName){
-                                idxToSearch = idx;	      
-                            }
-                            else if(dNode.type === "person"){		  
-                                if((dNode.name === nodeName)  && (dNode.birth === birthDate))idxToSearch = idx;
-                            }
-                        });*/
-                        //console.log('idxToSearch in centerNZoom : ', idxToSearch);
                         
                         if(birthDate === ""){//if searched node is a house...
                             const theNode = nodeSelection.filter(function(d){return d.name === nodeName;});
@@ -900,11 +860,10 @@ export const ForceLayout = (props) => {
 
                     var theNode = nodeSelection.filter(function(d){return d.id === nodeToSearch.id;});                    
                     const theNodeIdx = nodeSelection.data().findIndex(function(d){return d.id === nodeToSearch.id;});
-                    
-                    //console.log('search node datum : ', theNode.datum());
+                                        
                     if(!alreadyHilit)hilit(theNode, theNodeIdx);
                     //then zoom to it...
-                    //console.log(node.filter(function(d){return d.name === nameToSearch;}).attr("transform"));
+                    
                     var zoomedScale = screenMode==="largeScreen"?4:6;
                     var zoomScale = +d3.zoomTransform(svg.node()).k;
                     if(zoomScale < zoomedScale)zoomScale = zoomedScale;	
@@ -918,21 +877,8 @@ export const ForceLayout = (props) => {
                     let t = d3.zoomIdentity.translate(x_translate, y_translate).scale(zoomScale);
                     svg.transition().duration(750).call(zoom.transform, t);
                     svg.call(zoom);
-
-                    if(screenMode==="midLowScreen"){
-                        //must reset tooltip before display..
-                        //tooltipSmallScreenMouseout();
-                        //tooltipSmallScreen(theNode.datum());
-                    }
-                    
-                    //scroll screen to viewing position, if not already...
-                    /*if(window.pageYOffset != 280){
-                        console.log("search pressed : " + window.pageYOffset);
-                        d3.transition()
-                            .duration(1000)
-                            .tween("scroll", scrollTween(280))
-                    }*/ 
-                }//else nameToSearch = "";
+                     
+                }
             }
 
             function hilit(theNode, idx){                                
@@ -960,8 +906,7 @@ export const ForceLayout = (props) => {
                                 return "translate(" + xPos + "," + (bottomLabelY + 10) + ")";
                             });
                     }//These topmost 2 will have special treatment..
-                    else{	  
-                        //if(nodeToSearch.transformMatrix1[1] < 0){//name label positioned above picture
+                    else{	                          
                         if(labelPos === "top"){//label positioned above picture
                             theNode.select("text.firstLabel")
                                 .transition().duration(100)
@@ -981,8 +926,7 @@ export const ForceLayout = (props) => {
                                 const xPos = -(this.getBBox().width/2);
                                 //if(theNode.datum().type === "house"){return;}
                                 return "translate(" + xPos + "," + (bottomLabelY - 5) + ")";
-                            });	
-                        //}else if(nodeToSearch.transformMatrix1[1] > 0){//name label positioned above picture
+                            });	                        
                         }else if(labelPos === "bottom"){//label positioned below picture
                             theNode.select("text.firstLabel")
                                 .transition().duration(100)
@@ -1014,10 +958,9 @@ export const ForceLayout = (props) => {
                             .style("font-weight", "bold")
                             .attr("font-size", "6px")
                             .attr("transform", function(e, d){
-                                //console.log('d on hover : ', e);
+                                
                                 const xPos = -(this.getBBox().width/2);
-                                //console.log('label bounding box hover  : ', this.getBBox());
-                                //if(theNode.datum().type === "house"){return;}
+                                
                                 return "translate(" + xPos + "," + (topLabelY + 8) + ")";
                             });	
                             
@@ -1026,21 +969,18 @@ export const ForceLayout = (props) => {
                             .style("font-weight", "bold")
                             .attr("font-size", "5px")
                             .attr("transform", function(e, d){
-                                const xPos = -(this.getBBox().width/2);
-                                //if(theNode.datum().type === "house"){return;}
+                                const xPos = -(this.getBBox().width/2);                                
                                 return "translate(" + xPos + "," + (bottomLabelY + 10) + ")";
                             });
                     }//These topmost 2 will have special treatment..
-                    else{	  
-                        //if(nodeToSearch.transformMatrix1[1] < 0){//name label positioned above picture
+                    else{	                      
                         if(labelPos === "top"){
                             theNode.select("text.firstLabel")
                                 .transition().duration(100)
                             .style("font-weight", "bold")
                             .attr("font-size", "6px")
                             .attr("transform", function(e, d){
-                                //console.log('d on hover : ', e);
-                                //console.log('label bounding box hover  : ', this.getBBox());
+                                
                                 const xPos = -(this.getBBox().width/2);
                                 var transY = -7;
                                 var transX = 0;
@@ -1052,7 +992,7 @@ export const ForceLayout = (props) => {
                                 if(id === "Ferdinand1865")transX+=11;
                                 if(id === "Alexandra1878")transX-=25;
                                 if(id === "Alexander1881"){transX+=5;transY+=4;}
-                                //if(type === "house"){return;}
+                                
                                 return "translate(" + (xPos + transX) + "," + (topLabelY +transY) + ")";
                             });	
                             
@@ -1078,9 +1018,6 @@ export const ForceLayout = (props) => {
                             .style("font-weight", "bold")
                             .attr("font-size", "6px")
                             .attr("transform", function(e, d){
-                                //console.log('d on hover : ', d);
-                                //console.log('label bounding box hover  : ', this.getBBox());
-                                //if(type === "house"){return;}
                                 const xPos = -(this.getBBox().width/2);	 
                                 var transY = 8;
                                 var transX = 0;
@@ -1113,7 +1050,6 @@ export const ForceLayout = (props) => {
                                 const xPos = -(this.getBBox().width/2);
                                 var transY = 10;
                                 var transX = 0;
-                                //if(type === "house"){return;}
                                 //some text overlapp-ed to node, can't be helped, some additional adjustment must be made...
                                 if(id === "Christian1831")transY-=2;
                                 if(id === "Henry1858"){transX+=4;transY-=2;}
@@ -1134,9 +1070,7 @@ export const ForceLayout = (props) => {
 
                     handleTooltip(theNode.datum());
                 }
-                
-                //console.log(masks.data())
-                //console.log('theNode data : ', theNode.datum());
+
                 const myMask = focus.selectAll("clipPath").filter(function(dMask){
                     return dMask.id === id;
                 }).selectAll("rect");
@@ -1185,9 +1119,7 @@ export const ForceLayout = (props) => {
                         return 500;
                         }else if(d.type === "house")return d.h/4;
                         else return 0;
-                    })
-                        //.attr("x", function(d){return (d.type==="person"?-15:-12.5);})
-                        //.attr("y", function(d){return (d.type==="person"?-20:-12.5);})
+                    })                        
                     .attr("transform", function(d){
                         if(d.type === "person"){
                         if(d.name === "Charles Carnegie" || d.name === "Friedrich Josias")
@@ -1319,8 +1251,6 @@ export const ForceLayout = (props) => {
                         }else if(d.type === "house"){return d.h/8;}
                         else return 0;
                     })
-                    //.attr("x", function(d){return (d.type==="person"?-15:-12.5);})
-                    //.attr("y", function(d){return (d.type==="person"?-20:-12.5);})
                     .attr("transform", function(d){
                         if(d.type === "person"){
                         if(d.name === "Charles Carnegie" || d.name === "Friedrich Josias")
@@ -1336,7 +1266,7 @@ export const ForceLayout = (props) => {
         [  famTreeWidth, famTreeHeight, nameFocus ]
     );
 
-    const canDraw = famTreeHeight > 0;// && !resized;
+    const canDraw = famTreeHeight > 0;
     return (  
         <div className="w-full h-full bg-green-400 flex-grow flex flex-col" >
             <div className='h-[50px] grow-0 bg-slate-50 flex justify-start items-center'>
